@@ -1,3 +1,6 @@
+##Description
+Simple webapp tries to solve a sudoku puzzle (fetched from free online sudoku puzzle API) using a genetic algorithm
+
 ## ✅ Client (Next.js) Commands
 
 ```bash
