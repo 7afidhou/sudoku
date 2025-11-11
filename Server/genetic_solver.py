@@ -1,25 +1,11 @@
-from flask import Flask, jsonify, request
 import numpy as np
 import random
-import matplotlib.pyplot as plt
-from flask_cors import CORS
-import requests
-app = Flask(__name__)
-CORS(app)
-# -------------------------------
-# 🧠 Sudoku puzzle input (0 = empty)
-# -------------------------------
-# -------------------------------
-# ⚙️ GA Parameters
-# -------------------------------
+
 POP_SIZE = 100
 MUTATION_RATE = 0.2
-GENERATIONS = 500  # Reduced for speed
+GENERATIONS = 500
 
 
-# -------------------------------
-# 🧬 Helper functions
-# -------------------------------
 def generate_individual(puzzle):
     individual = np.zeros((9, 9), dtype=int)
     for i in range(9):
@@ -70,9 +56,6 @@ def get_fixed_positions(puzzle):
     return fixed
 
 
-# -------------------------------
-# 🔁 Genetic Algorithm
-# -------------------------------
 def genetic_algorithm(puzzle):
     fixed_positions = get_fixed_positions(puzzle)
     population = [generate_individual(puzzle) for _ in range(POP_SIZE)]
@@ -97,44 +80,11 @@ def genetic_algorithm(puzzle):
             parent1 = population[a] if fitness_scores[a] > fitness_scores[b] else population[b]
             a, b = random.sample(range(POP_SIZE), 2)
             parent2 = population[a] if fitness_scores[a] > fitness_scores[b] else population[b]
+
             child = crossover(parent1, parent2)
             child = mutate(child, fixed_positions)
             new_population.append(child)
+
         population = new_population
 
     return best_individual
-
-
-# -------------------------------
-# 🌐 Flask Endpoint
-# -------------------------------
-@app.route("/sudoku", methods=["GET"])
-def sudoku_solver():
-    # Step 1: Fetch puzzle from external API
-    response = requests.get("https://sudoku-api.vercel.app/api/dosuku")
-    data = response.json()
-    difficulty = data["newboard"]["grids"][0]["difficulty"]
-    grid_data = data["newboard"]["grids"][0]
-    puzzle_data = np.array(grid_data["value"])
-    api_solution = np.array(grid_data["solution"])
-    # Step 2: Solve with your GA
-    gen_solution = genetic_algorithm(puzzle_data)
-
-    # Step 3: Compute accuracy (optional)
-    accuracy = np.sum(gen_solution == api_solution) / 81 * 100
-    print(f"GA Solution Accuracy: {accuracy:.2f}%")
-    # Step 4: Return everything
-    return jsonify({
-        "puzzle": puzzle_data.tolist(),
-        "api_solution": api_solution.tolist(),
-        "ga_solution": gen_solution.tolist(),
-        "difficulty": difficulty,
-        "accuracy": accuracy
-    })
-
-
-# -------------------------------
-# 🚀 Run Flask App
-# -------------------------------
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, debug=True)
