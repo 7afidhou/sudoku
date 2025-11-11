@@ -59,32 +59,24 @@ def get_fixed_positions(puzzle):
 def genetic_algorithm(puzzle):
     fixed_positions = get_fixed_positions(puzzle)
     population = [generate_individual(puzzle) for _ in range(POP_SIZE)]
-
     best_individual = None
     best_fitness = 0
-
     for gen in range(GENERATIONS):
         fitness_scores = [calculate_fitness(ind) for ind in population]
-
         gen_best = max(fitness_scores)
         if gen_best > best_fitness:
             best_fitness = gen_best
             best_individual = population[fitness_scores.index(gen_best)]
-
         if best_fitness == 243:
             break
-
         new_population = []
         for _ in range(POP_SIZE):
             a, b = random.sample(range(POP_SIZE), 2)
             parent1 = population[a] if fitness_scores[a] > fitness_scores[b] else population[b]
             a, b = random.sample(range(POP_SIZE), 2)
             parent2 = population[a] if fitness_scores[a] > fitness_scores[b] else population[b]
-
             child = crossover(parent1, parent2)
             child = mutate(child, fixed_positions)
             new_population.append(child)
-
         population = new_population
-
     return best_individual
