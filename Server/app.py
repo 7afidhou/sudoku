@@ -28,8 +28,7 @@ def sudoku_solver():
     accuracy = np.sum(gen_solution == api_solution) / 81 * 100
     print(f"GA Solution Accuracy: {accuracy:.2f}%")
 
-    with open("puzzle.txt", "a") as f:
-        f.write(difficulty + "  "+ str(accuracy) + "\n")
+
     return jsonify({
         "puzzle": puzzle_data.tolist(),
         "api_solution": api_solution.tolist(),

@@ -33,37 +33,40 @@ def calculate_fitness(individual):
     return score
 
 
-# def crossover(parent1, parent2):
-#     child = np.zeros((9, 9), dtype=int)
-    
-#     # List of all 9 block positions (top-left corners)
-#     blocks = [(r, c) for r in range(0, 9, 3) for c in range(0, 9, 3)]
-#     random.shuffle(blocks)  # Shuffle block order
-    
-#     i = random.randint(0, 9)  # Number of blocks to take from parent1
-    
-#     # Take first i blocks from parent1
-#     for r, c in blocks[:i]:
-#         child[r:r+3, c:c+3] = parent1[r:r+3, c:c+3]
-    
-#     # Take remaining blocks from parent2
-#     for r, c in blocks[i:]:
-#         child[r:r+3, c:c+3] = parent2[r:r+3, c:c+3]
-    
-#     return child
 def crossover(parent1, parent2):
-    child = np.zeros((9,9), dtype=int)
+    child = np.zeros((9, 9), dtype=int)
     
-    # Random number of rows from parent1
-    i = random.randint(0, 9)  # i rows from parent1, 9-i from parent2
+    # List of all 9 block positions (top-left corners)
+    blocks = [(r, c) for r in range(0, 9, 3) for c in range(0, 9, 3)]
+    random.shuffle(blocks)  # Shuffle block order
     
-    # Take first i rows from parent1
-    if i > 0:
-        child[:i] = parent1[:i]  
-    # Take remaining rows from parent2
-    if i < 9:
-        child[i:] = parent2[i:] 
+    i = random.randint(0, 9)  # Number of blocks to take from parent1
+    
+    # Take first i blocks from parent1
+    for r, c in blocks[:i]:
+        child[r:r+3, c:c+3] = parent1[r:r+3, c:c+3]
+    
+    # Take remaining blocks from parent2
+    for r, c in blocks[i:]:
+        child[r:r+3, c:c+3] = parent2[r:r+3, c:c+3]
+    
     return child
+
+# def crossover(parent1, parent2):
+#     child = np.zeros((9,9), dtype=int)
+    
+#     # Random number of rows from parent1
+#     i = random.randint(0, 9)  # i rows from parent1, 9-i from parent2
+    
+#     # Take first i rows from parent1
+#     if i > 0:
+#         child[:i] = parent1[:i]  
+#     # Take remaining rows from parent2
+#     if i < 9:
+#         child[i:] = parent2[i:] 
+#     return child
+
+
 def mutate(individual, fixed_positions):
     for i in range(9):
         if random.random() < MUTATION_RATE:
