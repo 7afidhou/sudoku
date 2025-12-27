@@ -3,7 +3,7 @@ import random
 
 POP_SIZE = 50
 MUTATION_RATE = 0.2
-GENERATIONS = 2000
+GENERATIONS = 5000
 
 
 def generate_individual(puzzle):
